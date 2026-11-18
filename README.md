@@ -10,6 +10,7 @@ Open `index.html` directly, or run `python3 -m http.server 8000` in this directo
 
 - Floating help icon opens a local quick-help panel for planning, destinations, and direct team contact. It is clearly marked as quick guidance rather than live chat.
 
+- Destinations advance automatically every four seconds while visible, with previous/next controls, pause/play, and native touch swiping. Autoplay pauses on hover, keyboard focus, an open itinerary dialog, or a hidden browser tab; reduced-motion preference disables autoplay by default.
 - Filter destination cards by coast, nature, and culture.
 - Open a destination to preview a sample trip outline.
 - Choose a destination, month, and travel group in the planner to create a personalised preview.
@@ -34,3 +35,20 @@ Copy, layout, and sample itineraries are design proposals. No prices, availabili
 - Geist: SIL Open Font License, included in `assets/GEIST-OFL.txt`.
 
 No changes were made to hashtravels.com.
+
+## Expanded destination and hero slideshow update
+
+The top landing picture crossfades every four seconds through Kerala, Kashmir, the Indian Himalayas, Ladakh, Rajasthan, and Goa. Previous/next and pause/play controls are provided. Autoplay pauses while the hero contains keyboard focus, while an itinerary dialog is open, when the hero is off-screen, or when the browser tab is hidden. Reduced-motion preference starts the slideshow paused.
+
+Kashmir, Himalayas, Ladakh, Rajasthan, and Goa have been added to the destination carousel, planner, and sample itinerary previews. These are proposed destinations for the mockup; availability remains subject to discussion with Hash Travels.
+
+Additional illustrative image sources:
+- Kashmir: https://images.unsplash.com/photo-1614056965546-42fbe24eb36c
+- Himachal Pradesh: https://images.unsplash.com/photo-1607836046730-3317bd58a31b
+- Ladakh: https://images.unsplash.com/photo-1667597916946-74cfcbf7a92d
+- Rajasthan: https://images.unsplash.com/photo-1661246709985-5f413432fc45
+- Goa: https://images.unsplash.com/photo-1512343879784-a960bf40e7f2
+
+## WhatsApp help
+
+A floating WhatsApp button and an action in the help panel open `https://wa.me/919148049119` with a prefilled trip enquiry. The number is the business contact listed on the original Hash Travels site; WhatsApp availability has not been independently verified. Opening the link does not send a message. Visitors review and send the enquiry in WhatsApp themselves. Update the number in `index.html` and `script.js` if the business uses a different WhatsApp number.
