@@ -57,4 +57,4 @@ The trip preview also offers **Send via WhatsApp**, which includes the selected 
 
 The planner uses a browser-independent month/year picker, with past months disabled and a flexible-dates option. Selected months are included in both email and WhatsApp enquiry drafts.
 
-Section links use one document-scroll animation per click, update the URL fragment, respect reduced-motion preferences, and pause carousel autoplay while the page is scrolling. Wheel, touch, and scroll keys interrupt the animation so manual scrolling remains responsive.
+Section links use one document-scroll animation per click, update the URL fragment, respect reduced-motion preferences, and pause carousel autoplay while the page is scrolling. Touch scrolling, pointer interactions outside section links, and scroll keys interrupt the animation. Residual trackpad wheel events do not cancel a newly clicked section link.

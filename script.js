@@ -5,8 +5,11 @@
   let navigationFrame=0,navigationActive=false,scrollBusyUntil=0;
   function stopNavigation(){cancelAnimationFrame(navigationFrame);navigationFrame=0;navigationActive=false;}
   addEventListener('scroll',()=>{scrollBusyUntil=performance.now()+250;},{passive:true});
-  addEventListener('wheel',stopNavigation,{passive:true});
-  addEventListener('touchstart',stopNavigation,{passive:true});
+  // A trackpad can keep sending inertial wheel events after a link click.
+  // Do not let those residual events cancel a newly requested navigation.
+  // A deliberate drag, touch scroll, or keyboard scroll can still cancel it.
+  addEventListener('touchmove',stopNavigation,{passive:true});
+  document.addEventListener('pointerdown',event=>{if(!event.target.closest('a[href^="#"]'))stopNavigation();});
   addEventListener('popstate',stopNavigation);
   document.addEventListener('keydown',event=>{
     if(['ArrowUp','ArrowDown','PageUp','PageDown','Home','End',' '].includes(event.key))stopNavigation();
@@ -27,14 +30,14 @@
       navigationActive=false;navigationFrame=0;scrollBusyUntil=performance.now()+250;
       if(event.detail===0){if(!target.hasAttribute('tabindex'))target.setAttribute('tabindex','-1');target.focus({preventScroll:true});}
     };
-    if(navigationMotion.matches||Math.abs(end-start)<1){scrollTo({top:end,behavior:'instant'});finish();return;}
+    if(navigationMotion.matches||Math.abs(end-start)<1){document.scrollingElement.scrollTop=end;finish();return;}
     navigationActive=true;
     const duration=Math.min(650,Math.max(350,Math.abs(end-start)*.22));
     const began=performance.now();
     function step(now){
       const t=Math.min(1,(now-began)/duration);
       const eased=t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
-      scrollTo({top:start+(end-start)*eased,behavior:'instant'});
+      document.scrollingElement.scrollTop=start+(end-start)*eased;
       if(t<1)navigationFrame=requestAnimationFrame(step);else finish();
     }
     navigationFrame=requestAnimationFrame(step);
