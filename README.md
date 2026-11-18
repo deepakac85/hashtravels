@@ -54,3 +54,5 @@ Additional illustrative image sources:
 A floating WhatsApp button and an action in the help panel open `https://wa.me/919148049119` with a prefilled trip enquiry. The number is the business contact listed on the original Hash Travels site; WhatsApp availability has not been independently verified. Opening the link does not send a message. Visitors review and send the enquiry in WhatsApp themselves. Update the number in `index.html` and `script.js` if the business uses a different WhatsApp number.
 
 The trip preview also offers **Send via WhatsApp**, which includes the selected destination, travel month (or flexible dates), and travel group in a draft to the listed business number. The visitor reviews and sends the message in WhatsApp; no message is sent automatically.
+
+The planner uses a browser-independent month/year picker, with past months disabled and a flexible-dates option. Selected months are included in both email and WhatsApp enquiry drafts.

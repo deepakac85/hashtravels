@@ -118,7 +118,39 @@
   };
   const dialog=document.getElementById('trip-dialog');
   const month=document.getElementById('travel-month');
-  const now=new Date();month.min=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0');
+  const now=new Date();
+  const monthToggle=document.getElementById('month-toggle');
+  const monthPanel=document.getElementById('month-panel');
+  const monthGrid=document.getElementById('month-grid');
+  const monthYear=document.getElementById('month-year');
+  const previousYear=document.getElementById('month-prev-year');
+  let pickerYear=now.getFullYear();
+  const monthNames=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  function closeMonthPicker(restoreFocus=false){monthPanel.hidden=true;monthToggle.setAttribute('aria-expanded','false');if(restoreFocus)monthToggle.focus();}
+  function renderMonths(){
+    monthYear.textContent=pickerYear;
+    previousYear.disabled=pickerYear<=now.getFullYear();
+    monthGrid.replaceChildren();
+    monthNames.forEach((name,index)=>{
+      const button=document.createElement('button');button.type='button';button.textContent=name.slice(0,3);button.setAttribute('aria-label',name+' '+pickerYear);
+      const value=pickerYear+'-'+String(index+1).padStart(2,'0');
+      button.disabled=pickerYear===now.getFullYear()&&index<now.getMonth();
+      button.setAttribute('aria-pressed',String(month.value===value));
+      button.addEventListener('click',()=>{month.value=value;document.getElementById('month-value').textContent=name+' '+pickerYear;monthToggle.setAttribute('aria-label','Travel month: '+name+' '+pickerYear);closeMonthPicker(true);});
+      monthGrid.append(button);
+    });
+  }
+  monthToggle.addEventListener('click',()=>{
+    if(!monthPanel.hidden){closeMonthPicker();return;}
+    pickerYear=month.value?Number(month.value.slice(0,4)):now.getFullYear();renderMonths();monthPanel.hidden=false;monthToggle.setAttribute('aria-expanded','true');
+  });
+  previousYear.addEventListener('click',()=>{if(pickerYear>now.getFullYear()){pickerYear--;renderMonths();}});
+  document.getElementById('month-next-year').addEventListener('click',()=>{pickerYear++;renderMonths();});
+  document.getElementById('month-clear').addEventListener('click',()=>{month.value='';document.getElementById('month-value').textContent='Choose month';monthToggle.setAttribute('aria-label','Choose travel month');closeMonthPicker(true);});
+  document.addEventListener('click',event=>{if(!event.target.closest('.month-picker'))closeMonthPicker();});
+  document.addEventListener('keydown',event=>{if(event.key==='Escape'&&!monthPanel.hidden){event.stopPropagation();closeMonthPicker(true);}});
+  document.addEventListener('focusin',event=>{if(!event.target.closest('.month-picker'))closeMonthPicker();});
+
   function showTrip(name,details='') {
     const trip=trips[name]||trips['Surprise me'];
     document.getElementById('dialog-title').textContent=name==='Surprise me'?'Your kind of escape':name;
