@@ -127,6 +127,8 @@
     trip.points.forEach(point=>{const li=document.createElement('li');li.textContent=point;list.append(li);});
     const body='Hello Hash Travels,\n\nI would like to discuss a personalised trip to '+name+'.\n'+details+'\n\nMy starting city: \nPreferred duration: \nApproximate budget: \n\nThank you.';
     document.getElementById('email-enquiry').href='mailto:support@hashtravels.com?subject='+encodeURIComponent('Trip enquiry: '+name)+'&body='+encodeURIComponent(body);
+    const whatsappMessage='Hello Hash Travels,\n\nI would like help planning a trip.\nDestination: '+name+'\n'+(details||'Travel dates and group: to be discussed.')+'\n\nPlease help me with an itinerary and quote. Thank you!';
+    document.getElementById('whatsapp-enquiry').href='https://wa.me/919148049119?text='+encodeURIComponent(whatsappMessage);
     dialog.showModal();
   }
   document.querySelectorAll('[data-trip]').forEach(button=>button.addEventListener('click',()=>showTrip(button.dataset.trip)));

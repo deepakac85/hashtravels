@@ -30,3 +30,6 @@
 /* WhatsApp opens an enquiry draft; nothing is sent automatically. */
 .whatsapp-launcher{position:fixed;right:24px;bottom:94px;z-index:29;width:58px;height:58px;display:grid;place-items:center;border-radius:50%;color:white;background:#168c4b;box-shadow:0 5px 22px #153f2533;transition:transform .2s}.whatsapp-launcher:hover{background:#10743d;transform:translateY(-3px)}.whatsapp-launcher[hidden]{display:none}.help-whatsapp{display:flex;justify-content:space-between;align-items:center;margin:0 22px 20px;padding:13px 15px;min-height:44px;border-radius:5px;background:#168c4b;color:white;font-size:12px}.help-whatsapp:hover{background:#10743d}
 @media(max-width:600px){.whatsapp-launcher{right:16px;bottom:87px;width:56px;height:56px}.help-whatsapp{margin:0 20px 18px}}
+
+/* Trip preview enquiry channels. */
+.trip-enquiry-actions{display:flex;flex-wrap:wrap;gap:12px;align-items:stretch}.trip-enquiry-actions .button{flex:1 1 190px;text-align:center}.trip-whatsapp{background:#168c4b;color:white}.trip-whatsapp:hover{background:#10743d}
