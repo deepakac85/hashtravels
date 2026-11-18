@@ -1,5 +1,45 @@
 (() => {
   'use strict';
+  // Keep page navigation independent of the carousel's native smooth scrolling.
+  const navigationMotion=matchMedia('(prefers-reduced-motion: reduce)');
+  let navigationFrame=0,navigationActive=false,scrollBusyUntil=0;
+  function stopNavigation(){cancelAnimationFrame(navigationFrame);navigationFrame=0;navigationActive=false;}
+  addEventListener('scroll',()=>{scrollBusyUntil=performance.now()+250;},{passive:true});
+  addEventListener('wheel',stopNavigation,{passive:true});
+  addEventListener('touchstart',stopNavigation,{passive:true});
+  addEventListener('popstate',stopNavigation);
+  document.addEventListener('keydown',event=>{
+    if(['ArrowUp','ArrowDown','PageUp','PageDown','Home','End',' '].includes(event.key))stopNavigation();
+  });
+  document.addEventListener('click',event=>{
+    const link=event.target.closest('a[href^="#"]');
+    if(!link||event.defaultPrevented||event.button!==0||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;
+    const hash=link.getAttribute('href');
+    let target;
+    try{target=hash==='#'?document.documentElement:document.getElementById(decodeURIComponent(hash.slice(1)));}catch{return;}
+    if(!target)return;
+    event.preventDefault();stopNavigation();
+    const start=scrollY;
+    const offset=parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop)||0;
+    const end=Math.max(0,Math.min(document.documentElement.scrollHeight-innerHeight,target===document.documentElement?0:target.getBoundingClientRect().top+start-offset));
+    if(location.hash!==hash)history.pushState(null,'',hash);
+    const finish=()=>{
+      navigationActive=false;navigationFrame=0;scrollBusyUntil=performance.now()+250;
+      if(event.detail===0){if(!target.hasAttribute('tabindex'))target.setAttribute('tabindex','-1');target.focus({preventScroll:true});}
+    };
+    if(navigationMotion.matches||Math.abs(end-start)<1){scrollTo({top:end,behavior:'instant'});finish();return;}
+    navigationActive=true;
+    const duration=Math.min(650,Math.max(350,Math.abs(end-start)*.22));
+    const began=performance.now();
+    function step(now){
+      const t=Math.min(1,(now-began)/duration);
+      const eased=t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
+      scrollTo({top:start+(end-start)*eased,behavior:'instant'});
+      if(t<1)navigationFrame=requestAnimationFrame(step);else finish();
+    }
+    navigationFrame=requestAnimationFrame(step);
+  });
+
   const hero=document.querySelector('.hero');
   const heroImages=[...hero.querySelectorAll('.hero-image')];
   const heroLocations=[['Alleppey, Kerala','The art of slowing down'],['Kashmir','Lakes, valleys & a change of pace'],['Himalayas, Himachal Pradesh','A little closer to the clouds'],['Ladakh','Big skies. Bigger perspectives.'],['Rajasthan','Stories in every stone'],['Goa','Find your coastal rhythm']];
@@ -20,7 +60,7 @@
   document.getElementById('hero-next').addEventListener('click',()=>showHero(heroIndex+1));
   heroPause.addEventListener('click',()=>{heroPaused=!heroPaused;updateHeroPause();});
   heroMotion.addEventListener('change',()=>{heroPaused=heroMotion.matches;updateHeroPause();});
-  setInterval(()=>{const r=hero.getBoundingClientRect();if(!heroPaused&&!document.hidden&&!hero.contains(document.activeElement)&&!document.querySelector('dialog[open]')&&r.bottom>0&&r.top<innerHeight)showHero(heroIndex+1);},4000);
+  setInterval(()=>{const r=hero.getBoundingClientRect();if(!navigationActive&&performance.now()>scrollBusyUntil&&!heroPaused&&!document.hidden&&!hero.contains(document.activeElement)&&!document.querySelector('dialog[open]')&&r.bottom>0&&r.top<innerHeight)showHero(heroIndex+1);},4000);
   updateHeroPause();
   const helpLauncher=document.getElementById('help-launcher');
   const helpPanel=document.getElementById('help-panel');
@@ -88,7 +128,7 @@
   track.addEventListener('pointerleave',()=>{hovered=false;});
   setInterval(()=>{
     const rect=track.getBoundingClientRect();
-    if(!slidesPaused&&!hovered&&!document.hidden&&!carousel.contains(document.activeElement)&&!document.querySelector('dialog[open]')&&rect.top<innerHeight&&rect.bottom>0)advanceSlide(1);
+    if(!navigationActive&&performance.now()>scrollBusyUntil&&!slidesPaused&&!hovered&&!document.hidden&&!carousel.contains(document.activeElement)&&!document.querySelector('dialog[open]')&&rect.top<innerHeight&&rect.bottom>0)advanceSlide(1);
   },4000);
   reducedMotion.addEventListener('change',()=>{slidesPaused=reducedMotion.matches;updateSlideControls();});
   new ResizeObserver(updateSlideControls).observe(track);

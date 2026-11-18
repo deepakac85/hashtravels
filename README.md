@@ -56,3 +56,5 @@ A floating WhatsApp button and an action in the help panel open `https://wa.me/9
 The trip preview also offers **Send via WhatsApp**, which includes the selected destination, travel month (or flexible dates), and travel group in a draft to the listed business number. The visitor reviews and sends the message in WhatsApp; no message is sent automatically.
 
 The planner uses a browser-independent month/year picker, with past months disabled and a flexible-dates option. Selected months are included in both email and WhatsApp enquiry drafts.
+
+Section links use one document-scroll animation per click, update the URL fragment, respect reduced-motion preferences, and pause carousel autoplay while the page is scrolling. Wheel, touch, and scroll keys interrupt the animation so manual scrolling remains responsive.
